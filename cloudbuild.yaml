@@ -1,0 +1,25 @@
+steps:
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrtpoint: gcloud
+    args: 
+      - 'builds'
+      - 'submit'
+      - '--tag'
+      - 'gcr.io/$PROJECT_ID/tresure-model:$COMMIT_SHA'
+      - '.'
+  
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'tresure-model'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/tresure-model:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+images:
+  - 'gcr.io/$PROJECT_ID/tresure-model:$COMMIT_SHA'
