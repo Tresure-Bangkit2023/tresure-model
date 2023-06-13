@@ -6,14 +6,16 @@ from tensorflow import keras
 model = keras.models.load_model('model/saved_model')
 
 def do_predict(user_id, places_not_visited):
+    user_id = user_id % 299
+    places_not_visited = np.expand_dims(places_not_visited, 1)
     user_places_array = np.hstack(
         ([[user_id]] * len(places_not_visited), places_not_visited)
     )
 
     predictions = model.predict(user_places_array).flatten()
     top_ratings_indices = predictions.argsort()[-15:][::-1]
-    recommended_place_ids = [places_not_visited[i] for i in top_ratings_indices]
-
+    recommended_place_ids = np.array([places_not_visited[i] for i in top_ratings_indices]).flatten().tolist()
+    
     result_dict = {
         "data": recommended_place_ids
     }
@@ -51,6 +53,7 @@ def predict():
     except:
         return '<p>Please input valid places not visited, e.g., "123, 321, 333".</p>'
 
+    print(places_not_visited)
     result = do_predict(user_id, places_not_visited)
     return result
 
