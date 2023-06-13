@@ -31,11 +31,11 @@ def hello():
 @app.route('/predict', methods=['POST'])
 def predict():
     user_id = request.form.get('user_id')
-    place_not_visited = request.form.get('place_not_visited')
+    places_not_visited = request.form.get('places_not_visited')
 
     empty_request = [None, '']
 
-    if user_id in empty_request :
+    if user_id in empty_request:
         return '<p>Please input user id.</p>'
     
     try:
@@ -43,15 +43,15 @@ def predict():
     except:
         return '<p>Please input a valid user id (Integer).</p>'
 
-    if place_not_visited in empty_request:
-        return '<p>Please input place not visited.</p>'
+    if places_not_visited in empty_request:
+        return '<p>Please input places not visited.</p>'
     
     try:
-        place_not_visited = convert_number(place_not_visited)
+        places_not_visited = convert_number(places_not_visited)
     except:
-        return '<p>Please input valid place not visited, eg "123, 321, 333"</p>'
+        return '<p>Please input valid places not visited, e.g., "123, 321, 333".</p>'
 
-    result = do_predict(user_id, place_not_visited)
+    result = do_predict(user_id, places_not_visited)
     return result
 
 
