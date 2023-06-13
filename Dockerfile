@@ -8,7 +8,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 COPY . .
 RUN pip install -Ur requirements.txt
-ENV PORT 8080  
+ENV PORT=8080  
 EXPOSE 8080
 
 CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=$PORT"]
