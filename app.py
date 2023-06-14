@@ -22,14 +22,11 @@ def do_predict(user_id, places_not_visited):
     }
     return result_dict
 
-
 app = Flask(__name__)
-
 
 @app.route("/")
 def hello():
     return {"message":"Hello! If you get this message, it's mean this service is running."}
-
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -55,7 +52,7 @@ def predict():
         })
     
     try:
-        user_id = int(user_id, 10)
+        user_id = int(user_id)
     except:
         return jsonify({
             "error": True,
