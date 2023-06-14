@@ -1,25 +1,45 @@
 steps:
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
-    args: 
-      - 'builds'
-      - 'submit'
-      - '--tag'
+  # pull the container image if it is already built
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - 'docker pull gcr.io/$PROJECT_ID/tresure-model:latest || exit 0'
+
+  # build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/tresure-model:latest'
+      - '-t'
       - 'gcr.io/$PROJECT_ID/tresure-model:$COMMIT_SHA'
+      - '--cache-from'
+      - 'gcr.io/$PROJECT_ID/tresure-model:latest'
       - '.'
-  
-  # Deploy container image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
+
+  # push the container image to Container Registry with all tags
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/tresure-model'
+      
+  # deploy container image to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
     args:
       - 'run'
       - 'deploy'
       - 'tresure-model'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/tresure-model:$COMMIT_SHA'
+      - 'gcr.io/$PROJECT_ID/tresure-model:latest'
       - '--region'
       - 'us-central1'
       - '--platform'
       - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '8Gi'
+      - '--port'
+      - '3000'
 images:
-  - 'gcr.io/$PROJECT_ID/tresure-model:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/tresure-model:latest'
