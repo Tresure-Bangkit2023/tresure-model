@@ -1,8 +1,4 @@
 steps:
-  - name: 'gcr.io/cloud-builders/git'
-    args: ['rev-parse', '--short', 'HEAD']
-    id: 'get_commit_sha'
-  
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: 
