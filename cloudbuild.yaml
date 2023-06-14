@@ -38,8 +38,8 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
       - '--memory'
-      - '8Gi'
+      - '4Gi'  # Ubah batas memori sesuai kebutuhan
       - '--port'
-      - '3000'
+      - '8000'
 images:
   - 'gcr.io/$PROJECT_ID/tresure-model:latest'
