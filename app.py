@@ -1,5 +1,5 @@
 import numpy as np
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from tensorflow import keras
 
 
@@ -33,42 +33,51 @@ def hello():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    user_id = request.form.get('user_id')
-    places_not_visited = request.form.get('places_not_visited')
+    if request.headers['Content-Type'] == 'application/json':
+        request_data = request.json
+    elif request.headers['Content-Type'] == 'application/x-www-form-urlencoded':
+        request_data = request.form
+    else:
+        return jsonify({
+            "error": True,
+            "message": "Invalid Content-Type. Only application/json and application/x-www-form-urlencoded are supported."
+        })
+
+    user_id = request_data.get('user_id')
+    places_not_visited = request_data.get('places_not_visited')
 
     empty_request = [None, '']
 
     if user_id in empty_request:
-        return {
-            "error": "true",
+        return jsonify({
+            "error": True,
             "message": "Please input user id"
-        }
+        })
     
     try:
         user_id = int(user_id, 10)
     except:
-        return {
-            "error": "true",
+        return jsonify({
+            "error": True,
             "message": "Please input a valid user id (Integer)."
-        }
+        })
 
     if places_not_visited in empty_request:
-        return {
-            "error": "true",
+        return jsonify({
+            "error": True,
             "message": "Please input places not visited."
-        }
+        })
     
     try:
         places_not_visited = convert_number(places_not_visited)
     except:
-        return {
-            "error": "true",
+        return jsonify({
+            "error": True,
             "message": "Please input valid places not visited, e.g., \"123, 321, 333\""
-        }
+        })
 
-    print(places_not_visited)
     result = do_predict(user_id, places_not_visited)
-    return result
+    return jsonify(result)
 
 
 def convert_number(string_data):
