@@ -4,9 +4,9 @@ from tensorflow import keras
 
 
 model = keras.models.load_model('model/saved_model')
+#model = keras.models.load_model('model/recommendation.hdf5')
 
 def do_predict(user_id, places_not_visited):
-    
     places_not_visited = np.expand_dims(places_not_visited, 1)
     user_places_array = np.hstack(
         ([[user_id % 299]] * len(places_not_visited), places_not_visited)
