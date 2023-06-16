@@ -26,7 +26,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return {"message":"Hello! If you get this message, it's mean this service is running."}
+    return {"message":"Hello, if you get this message, it means this service is running."}
 
 @app.route('/predict', methods=['POST'])
 def predict():
