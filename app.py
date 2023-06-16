@@ -13,7 +13,7 @@ def do_predict(user_id, places_not_visited):
     )
 
     predictions = model.predict(user_places_array).flatten()
-    top_ratings_indices = predictions.argsort()[-15:][::-1]
+    top_ratings_indices = predictions.argsort()[-30:][::-1]
     recommended_place_ids = np.array([places_not_visited[i] for i in top_ratings_indices]).flatten().tolist()
     
     result_dict = {
